@@ -7,11 +7,11 @@ using namespace std;
 
 
 int main(){
-	ifstream read("..//named-places.txt");
+	ifstream read("..named-places.txt");
 	
-	fstream stored("writtenPlaces.bin", ios::binary | ios::in | ios::out | ios::trunc);
-	fstream hash("hash.bin", ios::binary | ios::in | ios::out | ios::trunc); 
-	fstream link("link.bin",ios::binary | ios::in | ios::out | ios::trunc);
+	fstream stored("..//writtenPlaces.bin", ios::binary | ios::in | ios::out | ios::trunc);
+	fstream hash("..//hash.bin", ios::binary | ios::in | ios::out | ios::trunc); 
+	fstream link("..//link.bin",ios::binary | ios::in | ios::out | ios::trunc);
 
 	HashTable ht;
 	

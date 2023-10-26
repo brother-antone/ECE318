@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <string.h>
+//#include <string.h>
 #include "base28.h"
 
 using namespace std;

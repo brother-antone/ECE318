@@ -10,8 +10,8 @@ binaryplace::binaryplace(const string line){
     longitude    = stof(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size, longit_size));
     distance     = stof(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size + longit_size + intersec_size, dist_size));
     intersection = stoi(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size + longit_size, intersec_size));
-    state[0]     = line.substr(cd_size, st_size-1);
-    state[1]     = line.substr(st_size-1, st_size);
+    state[0]     = line[cd_size];
+    state[1]     = line[cd_size+1];
     string s = line.substr(cd_size + st_size, nm_size);
     set_string_length(s, 35);
     big b(s);

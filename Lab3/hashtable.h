@@ -2,10 +2,10 @@
 #define HASHTABLE_H
 
 #include "base28.cpp"
-#include "binaryplaces.cpp"
+#include "binaryplaces.h"
 #include <iostream>
 #include <fstream>
-#include <string.h>
+//#include <string.h>
 
 using namespace std;
 
