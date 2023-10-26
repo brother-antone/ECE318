@@ -20,7 +20,7 @@ binaryplace::binaryplace(const string line){
     b.print_digits(); 
 }
 
-link::link(int index, int next){
+Link::Link(int index, int next){
 	i = index;
 	n = next;
 }

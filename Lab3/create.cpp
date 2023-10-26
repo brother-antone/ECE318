@@ -13,6 +13,8 @@ int main(){
 	fstream hash("hash.bin", ios::binary | ios::in | ios::out | ios::trunc); 
 	fstream link("link.bin",ios::binary | ios::in | ios::out | ios::trunc);
 
+	HashTable ht;
+	
 	if(!stored.is_open() || !hash.is_open() || !link.is_open() || !read.is_open()){
 		cout << "A file(s) could not be opened." << endl;
 		return -1;
@@ -23,23 +25,11 @@ int main(){
 
 	while(getline(read, readline))
 	{
-		binaryplace bp(readline);
-		stored.write((char *) &bp, sizeof(bp));
-		//add(index, bp);
+		binaryplace *bp = new binaryplace(readline);
+		stored.write((char *) bp, sizeof(binaryplace));
+		ht.add_to(index, bp);
 		index++;
 	}
- 
-	//Write data to files
-	//use the write function
-	
-	// For cursor to be put at a specific position in outfile
-	// file.seekp(26000*sizeof(binaryplace struct), ios::beg)    ------------------  this is for the hash function (indexing the hash function)
-
-	// then use write function
-	// hashtable.write((char* ) &bp, sizeof(bp));
-	//
-	//
-	// Do the same for writePlaces.bin and link.bin
 	
 	stored.close();
 	hash.close();

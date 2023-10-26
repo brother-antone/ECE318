@@ -31,9 +31,9 @@ struct binaryplace{
 	binaryplace(const string line);
 };
 
-struct link{
+struct Link{
 	int i, n;
-	link(int idx, int next);
+	Link(int idx, int next);
 };
 
 

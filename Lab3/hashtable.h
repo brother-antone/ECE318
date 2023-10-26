@@ -27,9 +27,6 @@ public:
 	HashTable();
 	~HashTable();
 	void add_to(int index, binaryplace *bp);
-	// search by name function
-	// search by state function
-
 };
 
 #endif

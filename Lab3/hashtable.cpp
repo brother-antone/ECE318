@@ -13,7 +13,7 @@ HashTable::~HashTable(){              // You will need to change this at some po
 }
 
 
-unsigned int HashTable::hashFun(const char* arr, int size = 22) {
+unsigned int HashTable::hashFun(const char* arr, int size) {
        unsigned int hashVal = 0;
 	for (int i = 0; i < size; i++){
 	 	char c = arr[i];
@@ -35,10 +35,21 @@ void HashTable::initializeFile(fstream &fileStream) {
 
 void HashTable::add_to(int index, binaryplace *bp) {
 	int key = hashFun(bp->name);
-	int val = -1;
+	int temp;
+
+	hashtable.seekg(key * sizeof(int), ios::beg);
+	hashtable.read((char *) &temp, sizeof(int));
+	
+	link.seekp(0, ios::end);
+	int val = link.tellp();
+
+	hashtable.seekp(key * sizeof(int), ios::beg);
+	hashtable.write((char *) &val, sizeof(int));
+
+	Link *lk = new Link(index, temp);
+	
+	link.write((char *) lk, sizeof(Link));
 }
-	//write link struct to link file
-	//write to key value index of hash
 	
 
 	
