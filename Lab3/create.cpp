@@ -35,4 +35,6 @@ int main(){
 	hash.close();
 	link.close();
 
+	return 0;
+
 }

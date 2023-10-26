@@ -12,8 +12,8 @@ using namespace std;
 class HashTable {
 
 private:
-	fstream writePlaces;
-	fstream hashtable;
+	fstream stored;
+	fstream hash;
 	fstream link;
 
 	const int maxHashSize;

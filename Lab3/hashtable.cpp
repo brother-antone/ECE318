@@ -3,12 +3,12 @@
 using namespace std;
 
 HashTable::HashTable() : maxHashSize(26000) {
-	initializeFile(hashtable);
+	initializeFile(hash);
 }
 
 HashTable::~HashTable(){              // You will need to change this at some point
-	writePlaces.close();
-	hashtable.close();
+	stored.close();
+	hash.close();
 	link.close();
 }
 
@@ -37,14 +37,14 @@ void HashTable::add_to(int index, binaryplace *bp) {
 	int key = hashFun(bp->name);
 	int temp;
 
-	hashtable.seekg(key * sizeof(int), ios::beg);
-	hashtable.read((char *) &temp, sizeof(int));
+	hash.seekg(key * sizeof(int), ios::beg);
+	hash.read((char *) &temp, sizeof(int));
 	
 	link.seekp(0, ios::end);
-	int val = link.tellp();
+	int val = link.tellp()/sizeof(Link);
 
-	hashtable.seekp(key * sizeof(int), ios::beg);
-	hashtable.write((char *) &val, sizeof(int));
+	hash.seekp(key * sizeof(int), ios::beg);
+	hash.write((char *) &val, sizeof(int));
 
 	Link *lk = new Link(index, temp);
 	
