@@ -7,7 +7,7 @@ using namespace std;
 
 
 int main(){
-	ifstream read("/home/www/class/een318/named-places.txt");
+	ifstream read("..//named-places.txt");
 	
 	fstream stored("writtenPlaces.bin", ios::binary | ios::in | ios::out | ios::trunc);
 	fstream hash("hash.bin", ios::binary | ios::in | ios::out | ios::trunc); 
@@ -21,12 +21,13 @@ int main(){
 	int index = 0;
 	string readline;
 
-	while(getline(read, readline)){
+	while(getline(read, readline))
+	{
 		binaryplace bp(readline);
 		stored.write((char *) &bp, sizeof(bp));
 		//add(index, bp);
 		index++;
-
+	}
  
 	//Write data to files
 	//use the write function

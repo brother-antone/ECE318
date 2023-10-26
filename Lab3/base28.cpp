@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <string>
 #include <cctype>
-//#include <strings.h>
+#include <strings.h>
 #include "base28.h"
 
 using namespace std;

@@ -4,7 +4,7 @@ using namespace std;
   
 binaryplace::binaryplace(const string line){ 
     unique       = stoi(line.substr(0, cd_size));
-    area         = line.substr(cd_size, st_size);
+    area         = stof(line.substr(cd_size, st_size));
     population   = stoi(line.substr(cd_size + st_size + nm_size, pop_size));
     latitude     = stof(line.substr(cd_size + st_size + nm_size + pop_size + ar_size, latit_size));
     longitude    = stof(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size, longit_size));

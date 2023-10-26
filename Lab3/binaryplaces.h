@@ -34,7 +34,7 @@ struct binaryplace{
 struct link{
 	int i, n;
 	link(int idx, int next);
-}
+};
 
 
 #endif
