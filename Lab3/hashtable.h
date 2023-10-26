@@ -20,9 +20,6 @@ private:
 	unsigned int hashFun(const char* arr, int size = 22);
 	void initializeFile(fstream& fileStream);
 
-	// write link file
-	// read hashtable
-	// write hashtable
 public:
 	HashTable();
 	~HashTable();

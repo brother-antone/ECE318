@@ -2,7 +2,7 @@
 
 using namespace std;
   
-binaryplace::binaryplace(const string line){ 
+binaryplace::binaryplace(const string line) { 
     unique       = stoi(line.substr(0, cd_size));
     area         = stof(line.substr(cd_size, st_size));
     population   = stoi(line.substr(cd_size + st_size + nm_size, pop_size));
@@ -20,7 +20,7 @@ binaryplace::binaryplace(const string line){
     b.print_digits(); 
 }
 
-Link::Link(int index, int next){
+Link::Link(int index, int next) {
 	i = index;
 	n = next;
 }
