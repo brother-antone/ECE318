@@ -3,7 +3,7 @@
 using namespace std;
 
 HashTable::HashTable() : maxHashSize(26000) {
-	inistializeFile(hashtable);
+	initializeFile(hashtable);
 }
 
 HashTable::~HashTable(){              // You will need to change this at some point
@@ -22,7 +22,7 @@ unsigned int HashTable::hashFun(const char* arr, int size = 22) {
 	return hashVal % maxHashSize;
 }
 
-void HashTable::inistializeFile(fstream &fileStream) {
+void HashTable::initializeFile(fstream &fileStream) {
 	fileStream.seekp(0, ios::beg);
 
 	int nullVal =  -1;
@@ -33,10 +33,10 @@ void HashTable::inistializeFile(fstream &fileStream) {
 	}
 }
 
-/*void HashTable::addto(fstream file1, fstream file2, int index, binaryplace bp) {
-	int key = hashFun(bp.name);
+void HashTable::add_to(int index, binaryplace *bp) {
+	int key = hashFun(bp->name);
 	int val = -1;
-*/
+}
 	//write link struct to link file
 	//write to key value index of hash
 	

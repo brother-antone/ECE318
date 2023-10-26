@@ -18,7 +18,7 @@ private:
 
 	const int maxHashSize;
 	unsigned int hashFun(const char* arr, int size = 22);
-	void inistializeFile(fstream& fileStream);
+	void initializeFile(fstream& fileStream);
 
 	// write link file
 	// read hashtable
@@ -26,7 +26,7 @@ private:
 public:
 	HashTable();
 	~HashTable();
-	// add function
+	void add_to(int index, binaryplace *bp);
 	// search by name function
 	// search by state function
 
