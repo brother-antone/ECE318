@@ -1,6 +1,7 @@
-#include "base28.h"
-#include "binaryplaces.h"
+//#include "base28.h"
+//#include "binaryplaces.h"
 #include "hashtable.h"
+#include <iostream>
 
 using namespace std;
 

@@ -1,12 +1,12 @@
 #ifndef BINARYPLACES_H
 #define BINARYPLACES_H
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <algorithm>
+//#include <iostream>
+//#include <iomanip>
+//#include <fstream>
+//#include <string>
+//#include <vector>
+//#include <algorithm>
 //#include <string.h>
 #include "base28.h"
 

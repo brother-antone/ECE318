@@ -1,9 +1,9 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-#include "base28.cpp"
+//#include "base28.cpp"
 #include "binaryplaces.h"
-#include <iostream>
+//#include <iostream>
 #include <fstream>
 //#include <string.h>
 
