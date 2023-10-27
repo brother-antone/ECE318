@@ -8,7 +8,7 @@ using namespace std;
 
 
 int main(){
-	ifstream read("..named-places.txt");
+	ifstream read("..//named-places.txt");
 	
 	fstream stored("..//writtenPlaces.bin", ios::binary | ios::in | ios::out | ios::trunc);
 	fstream hash("..//hash.bin", ios::binary | ios::in | ios::out | ios::trunc); 
@@ -16,26 +16,45 @@ int main(){
 
 	HashTable ht;
 	
-	if(!stored.is_open() || !hash.is_open() || !link.is_open() || !read.is_open()){
-		cout << "A file(s) could not be opened." << endl;
+	if(!stored.is_open()) { 
+		cout << "Stored file could not be opened." << endl;
 		return -1;
 	}
 
-	int index = 0;
-	string readline;
-
-	while(getline(read, readline))
+	else if(!hash.is_open())
 	{
-		binaryplace *bp = new binaryplace(readline);
-		stored.write((char *) bp, sizeof(binaryplace));
-		ht.add_to(index, bp);
-		index++;
-	}
+		cout << "Hash file could not be opened." << endl;
+		return -1;
+	}	
+
+	else if(!link.is_open())
+	{
+		cout << "Link file could not be opened" << endl;
+		return -1;
+	}	
+
+	else if(!read.is_open())
+	{
+		cout << "Could not read file named places" << endl;
+		return -1;
+	}	
+	else
+	{
+		int index = 0;
+		string readline;
+
+		while(getline(read, readline))
+		{
+			binaryplace *bp = new binaryplace(readline);
+			stored.write((char *) bp, sizeof(binaryplace));
+			ht.add_to(index, bp);
+			index++;
+		}
 	
-	stored.close();
-	hash.close();
-	link.close();
+		stored.close();
+		hash.close();
+		link.close();
 
-	return 0;
-
+		return 0;
+	}	
 }
