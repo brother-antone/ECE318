@@ -1,11 +1,9 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-//#include "base28.cpp"
 #include "binaryplaces.h"
-//#include <iostream>
 #include <fstream>
-//#include <string.h>
+
 
 using namespace std;
 
@@ -16,7 +14,7 @@ private:
 	fstream hash;
 	fstream link;
 
-	const int maxHashSize;
+	const int maxHashSize = 26000;
 	unsigned int hashFun(const char* arr, int size = 22);
 	void initializeFile(fstream& fileStream);
 
