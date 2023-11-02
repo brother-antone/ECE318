@@ -57,7 +57,7 @@ struct road
     {
         cout << name << " " << type << " " << endl;
         cout << "Intersection A: ";
-        a->print()
+        a->print();
         cout << "Intersection B: ";
         b->print();
         cout << length << endl;
@@ -66,10 +66,10 @@ struct road
     
 };
 
-void readInter(const string &file_name)
+void readInter(const string &file1)
 {
-    ifstream fin;
-    fin.open(file_name);
+    ifstream fin1;
+    fin1.open(file1);
 
     double lo;
     double la;
@@ -77,24 +77,47 @@ void readInter(const string &file_name)
     string s;
     string n;
     
-    if(fin.fail())
+    if(fin1.fail())
     {
-        cout << "Error opening " << file_name << endl;
+        cout << "Error opening " << file1 << endl;
         return;
     }
 
-    while(!fin.eof())
+    while(!fin1.eof())
     {
-        fin >> lo >> la >> d >> s >> n;
+        fin1 >> lo >> la >> d >> s >> n;
         intersection * i = new intersection(lo, la, d, s, n);
         I.push_back(i);
     }
     
-    fin.close();
-    cout << file_name << "read successful" << endl;
+    fin1.close();
+    cout << file1 << "read successful" << endl;
 }
 
-//void readRoads
+void readRoads(const string &file2)
+{
+    ifstream fin2;
+    fin2.open(file2);
+
+    string n;
+    string t;
+    int a;
+    int b;
+    double l;
+
+    if(fin2.fail())
+    {
+        cout << "Error opening " << file2 << endl;
+        return;
+    }
+
+    while(!fin2.eof())
+    {
+        fin2 >> n >> t >> a >> b >> l;
+        road * r = new road(n , t, I[a], I[b], l);
+        I[a]->R.push_back(r);
+    }
+}
 
 int main()
 {
