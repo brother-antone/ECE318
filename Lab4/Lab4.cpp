@@ -15,6 +15,7 @@ vector <intersection*> I;
 
 struct intersection
 {
+    int index;
     double longi;
     double lati;
     float dist;
@@ -23,8 +24,9 @@ struct intersection
 
     vector<road*> R;
     
-    intersection(double lo, double la, float d, string s, string n)
+    intersection(int i, double lo, double la, float d, string s, string n)
     {
+        index = i;
         longi = lo;
         lati = la;
         dist = d;
@@ -34,7 +36,7 @@ struct intersection
 
     void print()
     {
-        cout << longi << " " << lati << " " << dist << " " << state << " " << name << endl;
+        cout << index << " " << longi << " " << lati << " " << dist << " " << state << " " << name << endl;
     }
 };
 
@@ -73,6 +75,7 @@ void readInter(const string &file1)
 {
     ifstream fin1;
     fin1.open(file1);
+    int idx = 0;
 
     double lo;
     double la;
@@ -91,8 +94,9 @@ void readInter(const string &file1)
         getline(fin1, s, ' ');
         getline(fin1, n);
         
-        intersection * i = new intersection(lo, la, d, s, n);
+        intersection * i = new intersection(idx, lo, la, d, s, n);
         I.push_back(i);
+        idx++;
         i->print();
     }
     
@@ -121,6 +125,7 @@ void readRoads(const string &file2)
     {
         road * r = new road(n , t, I[a], I[b], l);
         I[a]->R.push_back(r);
+        I[b]->R.push_back(r); // Idk if this is what the code needs
         r->print();
     }
 
@@ -150,13 +155,25 @@ void traverse(int index)
         temp->print();
         for(int i = 0; i < temp->R.size(); i++)
         {
-            cout << "Exit " << i << ": ";
-            temp->R[i]->print();
+            string dir = dirfromto(temp->R[i]->a->longi, temp->R[i]->a->lati, temp->R[i]->b->longi, temp->R[i]->b->lati);
+            string oppdir = dirfromto(temp->R[i]->b->longi, temp->R[i]->b->lati, temp->R[i]->a->longi, temp->R[i]->a->lati);
+            if(temp->index == temp->R[i]->a->index)
+            {
+                cout << "Exit " << i+1 << ": " << temp->R[i]->name << ", ";
+                cout << temp->R[i]->length << " miles " << dir << " to intersection #" << temp->R[i]->b->index;
+                cout << ", " << temp->R[i]->b->dist << " miles from " << temp->R[i]->b->name << endl;
+            }
+            else
+            {
+                cout << "Exit " << i+1 << ": " << temp->R[i]->name << ", ";
+                cout << temp->R[i]->length << " miles " << oppdir << " to intersection #" << temp->R[i]->a->index;
+                cout << ", " << temp->R[i]->a->dist << " miles from " << temp->R[i]->a->name << endl;
+            }
         }
         cout << "Which exit will you take?" << endl;
-        cout << "> " << endl;
-        cin >> ext;
-        temp = temp->R[ext]->b;
+        cout << "> ";
+        cin >> ext ;
+        temp = temp->R[ext-1]->b;
     }
     
 }
