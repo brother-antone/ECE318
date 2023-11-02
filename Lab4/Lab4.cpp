@@ -5,6 +5,9 @@
 
 using namespace std;
 
+const double pi = acos(-1.0);
+const string dirs[] = { "N", "NE", "E", "SE", "S", "SW", "W", "NW", "N" };
+
 struct intersection;
 struct road;
 
@@ -83,11 +86,14 @@ void readInter(const string &file1)
         return;
     }
 
-    while(!fin1.eof())
+    while(fin1 >> lo >> la >> d >> ws)
     {
-        fin1 >> lo >> la >> d >> s >> n;
+        getline(fin1, s, ' ');
+        getline(fin1, n);
+        
         intersection * i = new intersection(lo, la, d, s, n);
         I.push_back(i);
+        i->print();
     }
     
     fin1.close();
@@ -111,17 +117,61 @@ void readRoads(const string &file2)
         return;
     }
 
-    while(!fin2.eof())
+    while(fin2 >> n >> t >> a >> b >> l)
     {
-        fin2 >> n >> t >> a >> b >> l;
         road * r = new road(n , t, I[a], I[b], l);
         I[a]->R.push_back(r);
+        r->print();
     }
+
+    fin2.close();
+    cout << file2 << "read successfully" << endl;
+}
+
+string dirfromto(double longitude1, double latitude1, double longitude2, double latitude2)
+    { 
+    double d = atan2(longitude2 - longitude1, latitude2 - latitude1) * 180.0 / pi + 22.5;
+    if (d < 0)
+        d += 360.0;
+    int n = (int)(d / 45.0);
+    return dirs[n];
+    }
+
+
+void traverse(int index)
+{
+    int ext;
+    cout << "Starting intersection number: " << index << endl;
+
+    intersection * temp = I[index];
+    
+    while(temp != nullptr)
+    {
+        temp->print();
+        for(int i = 0; i < temp->R.size(); i++)
+        {
+            cout << "Exit " << i << ": ";
+            temp->R[i]->print();
+        }
+        cout << "Which exit will you take?" << endl;
+        cout << "> " << endl;
+        cin >> ext;
+        temp = temp->R[ext]->b;
+    }
+    
 }
 
 int main()
 {
-    
+    int index; 
+    readInter("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\intersections.txt");
+    readRoads("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\connections.txt");
+
+    cout << "What intersection will you start at?" << endl;
+    cout << "> ";
+    cin >> index;
+
+    traverse(index);
     
     return 0;
 }
