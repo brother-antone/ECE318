@@ -1,13 +1,7 @@
 #ifndef BINARYPLACES_H
 #define BINARYPLACES_H
 
-//#include <iostream>
-//#include <iomanip>
-//#include <fstream>
-//#include <string>
-//#include <vector>
-//#include <algorithm>
-//#include <string.h>
+#include <iostream>
 #include "base28.h"
 
 using namespace std;
@@ -34,6 +28,10 @@ struct binaryplace{
 struct Link{
 	int i, n;
 	Link(int idx, int next);
+	void print()
+	{
+		cout << "Index: " << i << ", Next: " << n << endl;
+	}
 };
 
 
