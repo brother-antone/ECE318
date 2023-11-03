@@ -97,11 +97,10 @@ void readInter(const string &file1)
         intersection * i = new intersection(idx, lo, la, d, s, n);
         I.push_back(i);
         idx++;
-        i->print();
     }
     
     fin1.close();
-    cout << file1 << "read successful" << endl;
+    cout << file1 << " read successful" << endl;
 }
 
 void readRoads(const string &file2)
@@ -126,11 +125,10 @@ void readRoads(const string &file2)
         road * r = new road(n , t, I[a], I[b], l);
         I[a]->R.push_back(r);
         I[b]->R.push_back(r); // Idk if this is what the code needs
-        r->print();
     }
 
     fin2.close();
-    cout << file2 << "read successfully" << endl;
+    cout << file2 << " read successful" << endl;
 }
 
 string dirfromto(double longitude1, double latitude1, double longitude2, double latitude2)
@@ -173,7 +171,15 @@ void traverse(int index)
         cout << "Which exit will you take?" << endl;
         cout << "> ";
         cin >> ext ;
-        temp = temp->R[ext-1]->b;
+        
+        if(temp->index == temp->R[ext-1]->a->index)
+        {
+            temp = temp->R[ext-1]->b;
+        }
+        else
+        {
+            temp = temp->R[ext-1]->a;   
+        }
     }
     
 }
