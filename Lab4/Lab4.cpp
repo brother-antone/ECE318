@@ -4,6 +4,8 @@
 #include <string>
 #include <iomanip>
 
+#include "../Lab3/hashtable.h"
+
 using namespace std;
 
 //Lab 2 Unique Code
@@ -19,16 +21,16 @@ struct Location {
     int intersection;
     double distance;
 
-    Location(int c = 0, string s = " ", string n = " ", int p = 0, double a = 0.0, double lat = 0.0, double longi = 0.0, int inter = 0, double d = 0.0) {
-        code = c;
-        state = s;
-        name = n;
-        population = p;
-        area = a;
-        latitude = lat;
-        longitude = longi;
-        intersection = inter;
-        distance = d;
+    Location(string line) {
+        code = stoi(line.substr(0, 8));
+        state = line.substr(8, 2);
+        name = trim(line.substr(10, 48));
+        population = stoi(line.substr(58, 8));
+        area = stod(line.substr(66, 14));
+        latitude = stod(line.substr(80, 10));
+        longitude = stod(90, 11));
+        intersection = stoi(101, 5));
+        distance = stod(line.substr(106, 8));
     }
 
     void print() {
@@ -40,6 +42,16 @@ struct Location {
 };
 */
 
+string trim(const string& str) {
+    size_t end = str.find("  ");
+    if (end != string::npos) {
+        return str.substr(0, end);
+    }
+    else {
+        return str;
+    }
+}
+
 struct Location {
     string state;
     string name;
@@ -48,15 +60,15 @@ struct Location {
     double longitude;
     int intersection;
     double distance;
-
-    Location(string s = " ", string n = " ",double a = 0.0, double lat = 0.0, double longi = 0.0, int inter = 0, double d = 0.0) {
-        state = s;
-        name = n;
-        area = a;
-        latitude = lat;
-        longitude = longi;
-        intersection = inter;
-        distance = d;
+    
+    Location(string line) {
+        state = line.substr(8, 2);
+        name = trim(line.substr(10, 48));
+        area = stod(line.substr(66, 14));
+        latitude = stod(line.substr(80, 10));
+        longitude = stod(line.substr(90, 11));
+        intersection = stoi(line.substr(101, 5));
+        distance = stod(line.substr(106, 8));
     }
 
     void print() {
@@ -113,6 +125,8 @@ abb* load_states() {
     }
     return array;
 }
+
+
 
 const double loadFactor = 0.7;
 
@@ -197,28 +211,6 @@ public:
         }
     }
 };
-
-const int cd_size = 8;
-const int st_size = 2;
-const int nm_size = 48;
-const int pop_size = 8;
-const int ar_size = 14;
-const int latit_size = 10;
-const int longit_size = 11;
-const int intersec_size = 5;
-const int dist_size = 8;
-
-string trim(const string& str) {
-    size_t end = str.find("  ");
-    if (end != string::npos) {
-        return str.substr(0, end);
-    }
-    else {
-        return str;
-    }
-}
-
-
 
 // Lab 4 Unique Code
 const double pi = acos(-1.0);
@@ -400,17 +392,74 @@ void traverse(int index)
     
 }
 
+int findInter(Location * loc)
+{
+    for(int j = 0; j < I.size(); j++)
+    {
+        if(loc->name == I[j]->name && loc->state == I[j]->state)
+        {
+            return j;
+        }
+    }
+    return -1;
+}
+
 int main()
 {
-    int index; 
+    DynamicHashTable hashTable;
+    int index;
     readInter("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\intersections.txt");
     readRoads("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\connections.txt");
 
-    cout << "What intersection will you start at?" << endl;
-    cout << "> ";
-    cin >> index;
+    string input;
+    string input_s;
+    abb* array = load_states();
+    
+    string line;
+    ifstream fin;
+    fin.open("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\named-places.txt");
+    if (fin.fail()) {
+        cout << "File could not be opened." << endl;
+        exit(1);
+    }
+    else
+    {
+        while (getline(fin, line))
+        {
+            hashTable.insert(Location(line));
+        }
+    }
+    fin.close();
 
-    traverse(index);
+    
+    cout << "What city/town will you start at?" << endl;
+    cout << "> ";
+    getline(cin, input);
+    cout << endl << endl;
+    hashTable.n_find(input, array);
+    cout << endl << endl;
+    
+    cout << "> ";
+    cin >> input_s;
+
+    Location* loc = hashTable.s_find(input, input_s);
+    if (loc) {
+        loc->print();
+    }
+    else {
+        cout << "Location not found.";
+    }
+    cout << endl << endl;
+
+    index = findInter(loc);
+    if(index > -1)
+    {
+        traverse(index); 
+    }
+    else
+    {
+        cout << input << " " << input_s << " not found." << endl;
+    }
     
     return 0;
 }
