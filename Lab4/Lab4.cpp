@@ -4,8 +4,6 @@
 #include <string>
 #include <iomanip>
 
-#include "../Lab3/hashtable.h"
-
 using namespace std;
 
 //Lab 2 Unique Code
@@ -89,27 +87,26 @@ struct abb {
     }
 
     void print() {
-        cout << abbreviation << " " << state_name << endl;
+        cout << state_name << " " << abbreviation << endl;
     }
 };
 
-string getStateName(const string& abbreviation, abb* array, int size = 57) {
-    for (int i = 0; i < size; i++) {
-        if (array[i].abbreviation == abbreviation) {
-            return array[i].state_name;
+string getStateName(const string& abbreviation, vector<abb> vec) {
+    for (int i = 0; i < vec.size(); i++) {
+        if (vec[i].abbreviation == abbreviation) {
+            return vec[i].state_name;
         }
     }
     return "";
 }
 
-abb* load_states() {
+vector<abb> load_states() {
     string loadin;
     string abbrev;
     string corresponding;
-    int i = 0;
 
-    abb* array = new abb[57];
-
+    vector<abb> vec;
+    
     ifstream states("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\states.txt");
     if (states.fail()) {
         cout << "States abbreviations could not be loaded." << endl;
@@ -117,13 +114,10 @@ abb* load_states() {
     }
     else {
         while (getline(states, loadin)) {
-            array[i].abbreviation = loadin.substr(0, 2);
-            array[i].state_name = loadin.substr(2);
-            i++;
-
+            vec.push_back(abb(loadin.substr(0, 2), loadin.substr(2)));
         }
     }
-    return array;
+    return vec;
 }
 
 
@@ -171,14 +165,14 @@ public:
         count++;
     }
 
-    void n_find(const string& name, abb* array) {
+    void n_find(const string& name, vector<abb> vec) {
         size_t index = hash(name);
         size_t startIndex = index;
         bool looped = false;
         bool found = false;
         while (looped == false || index != startIndex) {
             if (table[index] && table[index]->name == name) {
-                cout << table[index]->state << getStateName(table[index]->state, array) << endl;
+                cout << getStateName(table[index]->state, vec) << " " << table[index]->state << endl;
                 found = true;
             }
             index = (index + 1) % table.size();
@@ -378,15 +372,28 @@ void traverse(int index)
         }
         cout << "Which exit will you take?" << endl;
         cout << "> ";
-        cin >> ext ;
-        
-        if(temp->index == temp->R[ext-1]->a->index)
+
+        while(!(cin >> ext) || ext > temp->R.size())
         {
-            temp = temp->R[ext-1]->b;
+            cin.clear();
+            cin.ignore();
+            cout << "Enter valid exit number" << endl << "> ";
+        }
+
+        if(ext == -1)
+        {
+            exit(0);
         }
         else
         {
-            temp = temp->R[ext-1]->a;   
+            if(temp->index == temp->R[ext-1]->a->index)
+            {
+                temp = temp->R[ext-1]->b;
+            }
+            else
+            {
+                temp = temp->R[ext-1]->a;   
+            }
         }
     }
     
@@ -413,7 +420,7 @@ int main()
 
     string input;
     string input_s;
-    abb* array = load_states();
+    vector<abb> vec = load_states();
     
     string line;
     ifstream fin;
@@ -435,31 +442,31 @@ int main()
     cout << "What city/town will you start at?" << endl;
     cout << "> ";
     getline(cin, input);
-    cout << endl << endl;
-    hashTable.n_find(input, array);
-    cout << endl << endl;
+    cout << endl;
+    hashTable.n_find(input, vec);
+    cout << endl;
     
     cout << "> ";
     cin >> input_s;
 
     Location* loc = hashTable.s_find(input, input_s);
     if (loc) {
-        loc->print();
+        index = findInter(loc);
+        if(index > -1)
+        {
+            traverse(index); 
+        }
+        else
+        {
+            cout << input << " " << input_s << " not found." << endl;
+        }
     }
     else {
         cout << "Location not found.";
     }
-    cout << endl << endl;
+    cout << endl;
 
-    index = findInter(loc);
-    if(index > -1)
-    {
-        traverse(index); 
-    }
-    else
-    {
-        cout << input << " " << input_s << " not found." << endl;
-    }
+
     
     return 0;
 }
