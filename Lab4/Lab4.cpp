@@ -346,7 +346,7 @@ void traverse(int index)
         cout << "Which exit will you take?" << endl;
         cout << "> ";
 
-        while((!(cin >> ext) || ext > temp->R.size()) && ext != -1)
+        while(((!(cin >> ext) || ext > temp->R.size()) || ext == 0) && ext != -1)
         {
             cin.clear();
             cin.ignore();
