@@ -4,6 +4,7 @@
 #include <string>
 #include <iomanip>
 #include <cmath>
+#include <ppltasks.h>
 
 using namespace std;
 
@@ -138,11 +139,12 @@ public:
         count++;
     }
 
-    void n_find(const string& name, vector<abb> vec) {
+    bool n_find(const string& name, vector<abb> vec) {
         size_t index = hash(name);
         size_t startIndex = index;
         bool looped = false;
         bool found = false;
+        cout << endl << "Possibilities:" << endl;
         while (looped == false || index != startIndex) {
             if (table[index] && table[index]->name == name) {
                 cout << getStateName(table[index]->state, vec) << " " << table[index]->state << endl;
@@ -155,6 +157,11 @@ public:
         }
         if (!found) {
                 cout << name << " was not found.";
+                return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
@@ -384,17 +391,53 @@ int findInter(Location * loc)
     return -1;
 }
 
+void search(DynamicHashTable hashTable, vector<abb> vec) {
+    int index;
+    string input;
+    string input_s;
+
+    cout << "What city/town will you start at?" << endl;
+    cout << "> ";
+    getline(cin, input);
+    if(input == "Q" || input == "q")
+    {
+        exit(0);
+    }
+    if(!hashTable.n_find(input, vec))
+    {
+        cout << endl;
+        search(hashTable, vec);
+    }
+    cout << endl << "Possibilities:" << endl;
+    cout << "> ";
+    getline(cin, input_s);
+    if(input_s == "Q" || input_s == "q")
+    {
+        exit(0);
+    }
+    Location* loc = hashTable.s_find(input, input_s);
+    if (loc) {
+        index = findInter(loc);
+        if (index > -1) {
+            traverse(index); 
+        } else {
+            cout << input << " " << input_s << " not found." << endl;
+            search(hashTable, vec);
+        }
+    } else {
+        cout << "Location not found." << endl;
+        search(hashTable, vec);
+    }
+    cout << endl;
+}
+
 int main()
 {
     DynamicHashTable hashTable;
     int index;
     readInter("../Files/intersections.txt");
     readRoads("../Files/connections.txt");
-
-    string input;
-    string input_s;
     vector<abb> vec = load_states();
-    
     ifstream fin;
     fin.open("../Files/named-places.txt");
     if (fin.fail()) {
@@ -410,36 +453,6 @@ int main()
         }
     }
     fin.close();
-
-    
-    cout << "What city/town will you start at?" << endl;
-    cout << "> ";
-    getline(cin, input);
-    cout << "Possibilities:" << endl;
-    hashTable.n_find(input, vec);
-    cout << endl;
-    
-    cout << "> ";
-    cin >> input_s;
-
-    Location* loc = hashTable.s_find(input, input_s);
-    if (loc) {
-        index = findInter(loc);
-        if(index > -1)
-        {
-            traverse(index); 
-        }
-        else
-        {
-            cout << input << " " << input_s << " not found." << endl;
-        }
-    }
-    else {
-        cout << "Location not found.";
-    }
-    cout << endl;
-
-
-    
+    search(hashTable, vec);
     return 0;
 }
