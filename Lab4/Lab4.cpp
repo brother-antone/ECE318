@@ -79,7 +79,7 @@ vector<abb> load_states() {
 
     vector<abb> vec;
     
-    ifstream states("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\states.txt");
+    ifstream states("..\\Files\\states.txt");
     if (states.fail()) {
         cout << "States abbreviations could not be loaded." << endl;
         exit(2);
@@ -387,8 +387,8 @@ int main()
 {
     DynamicHashTable hashTable;
     int index;
-    readInter("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\intersections.txt");
-    readRoads("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\connections.txt");
+    readInter("..\\Files\\intersections.txt");
+    readRoads("..\\Files\\connections.txt");
 
     string input;
     string input_s;
