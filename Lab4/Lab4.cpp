@@ -80,7 +80,7 @@ vector<abb> load_states() {
 
     vector<abb> vec;
     
-    ifstream states("..\\Files\\states.txt");
+    ifstream states("../Files/states.txt");
     if (states.fail()) {
         cout << "States abbreviations could not be loaded." << endl;
         exit(2);
@@ -388,15 +388,15 @@ int main()
 {
     DynamicHashTable hashTable;
     int index;
-    readInter("..\\Files\\intersections.txt");
-    readRoads("..\\Files\\connections.txt");
+    readInter("../Files/intersections.txt");
+    readRoads("../Files/connections.txt");
 
     string input;
     string input_s;
     vector<abb> vec = load_states();
     
     ifstream fin;
-    fin.open("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\named-places.txt");
+    fin.open("../Files/named-places.txt");
     if (fin.fail()) {
         cout << "File could not be opened." << endl;
         exit(1);
