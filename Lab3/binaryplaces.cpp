@@ -5,9 +5,9 @@
 using namespace std;
   
 binaryplace::binaryplace(const string line) { 
-    //unique       = stoi(line.substr(0, cd_size));
+    unique       = stoi(line.substr(0, cd_size));
     area         = stof(line.substr(cd_size + st_size + nm_size + pop_size, ar_size));
-    //population   = stoi(line.substr(cd_size + st_size + nm_size, pop_size));
+    population   = stoi(line.substr(cd_size + st_size + nm_size, pop_size));
     latitude     = stof(line.substr(cd_size + st_size + nm_size + pop_size + ar_size, latit_size));
     longitude    = stof(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size, longit_size));
     distance     = stof(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size + longit_size + intersec_size, dist_size));
@@ -20,8 +20,6 @@ binaryplace::binaryplace(const string line) {
     b.to_bytes((char *)name, 22);
     cout << "'" << s << "' -> ";
     b.print_digits();
-	//cout << line.substr(0, cd_size) << endl;
-	//cout << line.substr(cd_size + st_size + nm_size, pop_size) << endl;
 }
 
 Link::Link(int index, int next) {

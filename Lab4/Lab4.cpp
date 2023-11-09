@@ -7,7 +7,16 @@
 using namespace std;
 
 //Lab 2 Unique Code
-/*
+string trim(const string& str) {
+    size_t end = str.find("  ");
+    if (end != string::npos) {
+        return str.substr(0, end);
+    }
+    else {
+        return str;
+    }
+}
+
 struct Location {
     int code;
     string state;
@@ -26,8 +35,8 @@ struct Location {
         population = stoi(line.substr(58, 8));
         area = stod(line.substr(66, 14));
         latitude = stod(line.substr(80, 10));
-        longitude = stod(90, 11));
-        intersection = stoi(101, 5));
+        longitude = stod(line.substr(90, 11));
+        intersection = stoi(line.substr(101, 5));
         distance = stod(line.substr(106, 8));
     }
 
@@ -38,44 +47,7 @@ struct Location {
         cout << defaultfloat << intersection << " " << distance << endl;
     }
 };
-*/
 
-string trim(const string& str) {
-    size_t end = str.find("  ");
-    if (end != string::npos) {
-        return str.substr(0, end);
-    }
-    else {
-        return str;
-    }
-}
-
-struct Location {
-    string state;
-    string name;
-    double area;
-    double latitude;
-    double longitude;
-    int intersection;
-    double distance;
-    
-    Location(string line) {
-        state = line.substr(8, 2);
-        name = trim(line.substr(10, 48));
-        area = stod(line.substr(66, 14));
-        latitude = stod(line.substr(80, 10));
-        longitude = stod(line.substr(90, 11));
-        intersection = stoi(line.substr(101, 5));
-        distance = stod(line.substr(106, 8));
-    }
-
-    void print() {
-        cout << state << " ";
-        cout << name << " ";
-        cout << fixed << setprecision(6) << area << " " << latitude << " " << longitude << " ";
-        cout << defaultfloat << intersection << " " << distance << endl;
-    }
-};
 
 struct abb {
     string abbreviation;
@@ -373,7 +345,7 @@ void traverse(int index)
         cout << "Which exit will you take?" << endl;
         cout << "> ";
 
-        while(!(cin >> ext) || ext > temp->R.size())
+        while((!(cin >> ext) || ext > temp->R.size()) && ext != -1)
         {
             cin.clear();
             cin.ignore();
@@ -422,7 +394,6 @@ int main()
     string input_s;
     vector<abb> vec = load_states();
     
-    string line;
     ifstream fin;
     fin.open("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\named-places.txt");
     if (fin.fail()) {
@@ -431,6 +402,7 @@ int main()
     }
     else
     {
+        string line;
         while (getline(fin, line))
         {
             hashTable.insert(Location(line));

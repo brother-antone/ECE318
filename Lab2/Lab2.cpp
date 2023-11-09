@@ -8,7 +8,7 @@
 
 using namespace std;
 
-/*
+
 struct Location {
     int code;
     string state;
@@ -35,34 +35,6 @@ struct Location {
     void print() {
         cout << code << " " << state << " ";
         cout << name << " " << population << " ";
-        cout << fixed << setprecision(6) << area << " " << latitude << " " << longitude << " ";
-        cout << defaultfloat << intersection << " " << distance << endl;
-    }
-};
-*/
-
-struct Location {
-    string state;
-    string name;
-    double area;
-    double latitude;
-    double longitude;
-    int intersection;
-    double distance;
-
-    Location(string s = " ", string n = " ",double a = 0.0, double lat = 0.0, double longi = 0.0, int inter = 0, double d = 0.0) {
-        state = s;
-        name = n;
-        area = a;
-        latitude = lat;
-        longitude = longi;
-        intersection = inter;
-        distance = d;
-    }
-
-    void print() {
-        cout << state << " ";
-        cout << name << " ";
         cout << fixed << setprecision(6) << area << " " << latitude << " " << longitude << " ";
         cout << defaultfloat << intersection << " " << distance << endl;
     }
@@ -240,17 +212,16 @@ int main() {
 
     else {
         while (getline(fin, line)) {
-            //cd = stoi(line.substr(0, cd_size));
+            cd = stoi(line.substr(0, cd_size));
             st = line.substr(cd_size, st_size);
             nm = trim(line.substr(cd_size + st_size, nm_size));
-            //pop = stoi(line.substr(cd_size + st_size + nm_size, pop_size));
+            pop = stoi(line.substr(cd_size + st_size + nm_size, pop_size));
             ar = stod(line.substr(cd_size + st_size + nm_size + pop_size, ar_size));
             latit = stod(line.substr(cd_size + st_size + nm_size + pop_size + ar_size, latit_size));
             longit = stod(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size, longit_size));
             intersec = stoi(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size + longit_size, intersec_size));
             dist = stod(line.substr(cd_size + st_size + nm_size + pop_size + ar_size + latit_size + longit_size + intersec_size, dist_size));
-            //hashTable.insert(Location(cd, st, nm, pop, ar, latit, longit, intersec, dist));
-            hashTable.insert(Location(st, nm, ar, latit, longit, intersec, dist));
+            hashTable.insert(Location(cd, st, nm, pop, ar, latit, longit, intersec, dist));
         }
     }
 
