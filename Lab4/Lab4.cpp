@@ -415,7 +415,7 @@ int main()
     cout << "What city/town will you start at?" << endl;
     cout << "> ";
     getline(cin, input);
-    cout << endl;
+    cout << "Possibilities:" << endl;
     hashTable.n_find(input, vec);
     cout << endl;
     
