@@ -331,7 +331,7 @@ void traverse(int index)
     
     while(temp != nullptr)
     {
-        //temp->print();
+        cout << "At intersection #" << temp->index << ", " << temp->dist << " miles from " << temp->name << ", " << temp->state << endl;
         for(int i = 0; i < temp->R.size(); i++)
         {
             string dir = dirfromto(temp->R[i]->a->longi, temp->R[i]->a->lati, temp->R[i]->b->longi, temp->R[i]->b->lati);
