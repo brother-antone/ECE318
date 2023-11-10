@@ -4,9 +4,9 @@
 using namespace std;
 
 HashTable::HashTable(){
-	stored.open("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\stored.bin", ios::binary | ios::in | ios::out | ios::trunc);
-	hash.open("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\hash.bin", ios::binary | ios::in | ios::out | ios::trunc);
-	link.open("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\link.bin",ios::binary | ios::in | ios::out | ios::trunc);
+	stored.open("../Files/stored.bin", ios::binary | ios::in | ios::out | ios::trunc);
+	hash.open("../Files/hash.bin", ios::binary | ios::in | ios::out | ios::trunc);
+	link.open("../Files/link.bin",ios::binary | ios::in | ios::out | ios::trunc);
 
 	if(stored.fail() || hash.fail() || link.fail())
 	{
@@ -83,7 +83,6 @@ void HashTable::add_to(int index, binaryplace *bp) {
 	hash.write((char *) &val, sizeof(int));
 
 	Link *lk = new Link(index, temp);
-	lk->print();
 	link.write((char *) lk, sizeof(Link));
 }
 	

@@ -6,7 +6,7 @@ using namespace std;
 
 
 int main(){
-	ifstream read("C:\\Users\\lanto\\Documents\\Rider\\ECE318\\Files\\named-places.txt");
+	ifstream read("../Files/named-places.txt");
 
 	HashTable ht;
 	
