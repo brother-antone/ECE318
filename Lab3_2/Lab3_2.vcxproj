@@ -154,13 +154,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Base28.cpp" />
+    <ClCompile Include="base28.cpp" />
     <ClCompile Include="binaryplaces.cpp" />
     <ClCompile Include="hashtable.cpp" />
     <ClCompile Include="Search.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Base28.h" />
+    <ClInclude Include="base28.h" />
     <ClInclude Include="binaryplaces.h" />
     <ClInclude Include="hashtable.h" />
   </ItemGroup>

@@ -1,5 +1,4 @@
 #include "hashtable.h"
-#include <iostream>
 
 using namespace std;
 
