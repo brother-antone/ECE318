@@ -13,6 +13,7 @@ const string dirs[] = { "N", "NE", "E", "SE", "S", "SW", "W", "NW", "N" };
 struct intersection;
 struct road;
 vector <intersection*> I;
+vector<intersection*> Queue;
 
 string trim(const string& str) {
     size_t end = str.find("  ");
@@ -436,6 +437,14 @@ void search(DynamicHashTable hashTable, vector<abb> vec) {
     cout << endl;
 }
 
+void priorityQ(intersection * ptr)
+{
+    // Write a program that takes the current intersection
+    // It then pushes back all the intersections the current intersection is connected to in order of least weigh to largest
+    // Therefore a priority queue is made
+    // A queue vector was initialized in the global space on top
+}
+
 vector <intersection*> shortestDist(int start, int dest)
 {
     intersection * current = I[start];
@@ -453,6 +462,7 @@ vector <intersection*> shortestDist(int start, int dest)
                 current->R[i]->a->weight = current->weight + current->R[i]->length;
             }
         }
+        
     }
 }
 
