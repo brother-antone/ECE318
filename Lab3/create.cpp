@@ -7,7 +7,7 @@ using namespace std;
 int main(){
 	ifstream read("../Files/named-places.txt");
 
-	HashTable ht;
+	HashTable ht("write");
 	
 		int index = 0;
 		string readline;
@@ -18,8 +18,6 @@ int main(){
 			ht.add_to(index, bp);
 			index++;
 		}
-		
-		ht.~HashTable();
 	
 		return 0;
 }

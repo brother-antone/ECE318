@@ -233,9 +233,9 @@ struct road
     string type;
     intersection * a;
     intersection * b;
-    double length;
+    int length;
 
-    road(string n, string t, intersection * a1, intersection * b1, double l)
+    road(string n, string t, intersection * a1, intersection * b1, int l)
     {
         name = n;
         type = t;
@@ -251,7 +251,7 @@ struct road
         a->print();
         cout << "Intersection B: ";
         b->print();
-        cout << length << endl;
+        cout <<"^^ Length: " << length << endl;
         
     }
     
@@ -308,9 +308,11 @@ void readRoads(const string &file2)
 
     while(fin2 >> n >> t >> a >> b >> l)
     {
-        road * r = new road(n , t, I[a], I[b], l);
+        int length = (int)(l * 10000);
+        road * r = new road(n , t, I[a], I[b], length);
         I[a]->R.push_back(r);
         I[b]->R.push_back(r);
+        r->print();
     }
 
     fin2.close();
@@ -434,6 +436,25 @@ void search(DynamicHashTable hashTable, vector<abb> vec) {
     cout << endl;
 }
 
+vector <intersection*> shortestDist(int start, int dest)
+{
+    intersection * current = I[start];
+    current->weight = 0;
+    while(true)     //Need to find a good argument for while loop
+    {
+        for(int i = 0; i < current->R.size(); i++)
+        {
+            if(current == current->R[i]->a && (current->weight + current->R[i]->length) < current->R[i]->b->weight)
+            {
+                current->R[i]->b->weight = current->weight + current->R[i]->length;
+            }
+            else if(current == current->R[i]->b && (current->weight + current->R[i]->length) < current->R[i]->a->weight)
+            {
+                current->R[i]->a->weight = current->weight + current->R[i]->length;
+            }
+        }
+    }
+}
 
 
 int main()

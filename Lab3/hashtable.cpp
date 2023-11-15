@@ -3,21 +3,29 @@
 
 using namespace std;
 
-HashTable::HashTable(){
-	stored.open("../Files/stored.bin", ios::binary | ios::in | ios::out | ios::trunc);
-	hash.open("../Files/hash.bin", ios::binary | ios::in | ios::out | ios::trunc);
-	link.open("../Files/link.bin",ios::binary | ios::in | ios::out | ios::trunc);
-
-	if(stored.fail() || hash.fail() || link.fail())
+HashTable::HashTable(const string &type){
+	if(type == "write")
 	{
-		cout << "Error opening file(s)" << endl;
+		stored.open("../Files/stored.bin", ios::binary | ios::in | ios::out | ios::trunc);
+		hash.open("../Files/hash.bin", ios::binary | ios::in | ios::out | ios::trunc);
+		link.open("../Files/link.bin",ios::binary | ios::in | ios::out | ios::trunc);
+
+		if(stored.fail() || hash.fail() || link.fail())
+		{
+			cout << "Error opening file(s)" << endl;
+		}
+		else
+		{
+			cout << "All files opened. " << endl;
+		}
+		initializeFile(hash);
 	}
 	else
 	{
-		cout << "All files opened. " << endl;
+		stored.open("../Files/stored.bin", ios::binary | ios::in);
+		hash.open("../Files/hash.bin", ios::binary | ios::in);
+		link.open("../Files/link.bin",ios::binary | ios::in);
 	}
-	initializeFile(hash);
-	
 }
 
 HashTable::~HashTable(){
@@ -83,6 +91,7 @@ void HashTable::add_to(int index, binaryplace *bp) {
 	hash.write((char *) &val, sizeof(int));
 
 	Link *lk = new Link(index, temp);
+	lk->print();
 	link.write((char *) lk, sizeof(Link));
 }
 	

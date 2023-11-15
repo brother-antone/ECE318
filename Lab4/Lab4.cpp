@@ -305,7 +305,7 @@ void readRoads(const string &file2)
     {
         road * r = new road(n , t, I[a], I[b], l);
         I[a]->R.push_back(r);
-        I[b]->R.push_back(r); // Idk if this is what the code needs
+        I[b]->R.push_back(r);
     }
 
     fin2.close();

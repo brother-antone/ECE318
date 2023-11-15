@@ -22,7 +22,26 @@ binaryplace::binaryplace(const string line) {
     b.print_digits();
 }
 
+binaryplace::binaryplace()
+{
+    memset(name, 0, sizeof(name));
+    state[0] = '\0';
+    state[1] = '\0';
+    unique = 0;
+    population = 0;
+    intersection = 0;
+    area = 0.0;
+    latitude = 0.0;
+    longitude = 0.0;
+    distance = 0.0;
+}
+
 Link::Link(int index, int next) {
     i = index;
     n = next;
+}
+
+void Link::print()
+{
+    cout << "Index: " << i << ", Next: " << n << endl;
 }

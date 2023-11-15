@@ -19,9 +19,11 @@ private:
     void initializeFile(fstream& fileStream);
 
 public:
-    HashTable();
+    HashTable(const string &type);
     ~HashTable();
     void add_to(int index, binaryplace *bp);
+    void n_find(string city);
+    binaryplace * s_find();
 };
 
 #endif

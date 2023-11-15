@@ -23,15 +23,13 @@ struct binaryplace{
 	int intersection;
 	float area, latitude, longitude, distance;
 	binaryplace(const string line);
+	binaryplace();
 };
 
 struct Link{
 	int i, n;
-	Link(int idx, int next);
-	void print()
-	{
-		cout << "Index: " << i << ", Next: " << n << endl;
-	}
+	Link(int idx = 0, int next = 0);
+	void print();
 };
 
 
