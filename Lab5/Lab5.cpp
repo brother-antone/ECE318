@@ -13,7 +13,6 @@ const string dirs[] = { "N", "NE", "E", "SE", "S", "SW", "W", "NW", "N" };
 struct intersection;
 struct road;
 vector <intersection*> I;
-vector<intersection*> Queue;
 
 string trim(const string& str) {
     size_t end = str.find("  ");
@@ -313,7 +312,6 @@ void readRoads(const string &file2)
         road * r = new road(n , t, I[a], I[b], length);
         I[a]->R.push_back(r);
         I[b]->R.push_back(r);
-        r->print();
     }
 
     fin2.close();
@@ -437,33 +435,286 @@ void search(DynamicHashTable hashTable, vector<abb> vec) {
     cout << endl;
 }
 
-void priorityQ(intersection * ptr)
-{
-    // Write a program that takes the current intersection
-    // It then pushes back all the intersections the current intersection is connected to in order of least weigh to largest
-    // Therefore a priority queue is made
-    // A queue vector was initialized in the global space on top
+class MinHeap{
+private:
+  intersection **heapArray;
+  int heapSize;
+  int capacity;
+
+public:
+  MinHeap (int cap);
+  ~MinHeap();
+  void resize();
+  void MinHeapify(int i);
+  void bubble(int i);
+  void swap(int a, int b);
+  void print();  
+
+  int parent(int i){
+    return (i-1)/2;
+  }
+
+  int left(int i){
+    return (i*2) + 1;
+  }
+
+  int right(int i){
+    return (i*2) + 2;
+  }
+  
+  intersection* getMin(){
+    if(heapSize == 0){
+      return nullptr;
+    }
+    else{
+      return heapArray[0];
+    }
+  }
+
+  intersection* extractMin();
+  void decreaseKey(intersection *ptr, int newWeight);
+  void deleteKey(int i);
+  void insertKey(intersection* ptr);
+  int findIndex(const intersection* ptr);  
+};
+
+MinHeap::MinHeap(int cap){
+  capacity = cap;
+  heapSize = 0;
+  heapArray = new intersection* [capacity];
 }
 
-vector <intersection*> shortestDist(int start, int dest)
+MinHeap::~MinHeap(){
+  for(int i = 0; i < heapSize; i++){
+    delete heapArray[i];
+  }
+  delete[] heapArray;
+}
+
+void MinHeap::resize(){
+  capacity *= 2;
+
+  intersection** newHeapArray = new intersection*[capacity];
+  
+  for(int i = 0; i < heapSize; i++){
+    newHeapArray[i] = heapArray[i];
+  }
+  delete[] heapArray;
+  heapArray = newHeapArray;
+}
+
+void MinHeap::MinHeapify(int i)
+{
+    int l = left(i);
+    int r = right(i);
+    int smallest = i;
+
+    if(l < heapSize && heapArray[l]-> weight < heapArray[smallest]->weight){
+        smallest = l;
+    }
+    if(r < heapSize && heapArray[r]-> weight < heapArray[smallest]->weight){
+        smallest = r;
+    }
+    if(smallest != i){
+        swap(smallest, i);
+        MinHeapify(smallest);
+    }
+}    
+void MinHeap::bubble(int i){                 
+  if(heapSize == 0){
+    return;
+  }
+  else if(i != 0 && heapArray[parent(i)]->weight > heapArray[i]->weight){
+    swap(parent(i), i);
+    bubble(parent(i));
+  }
+}
+
+intersection* MinHeap::extractMin(){
+  if(heapSize <= 0){
+    return nullptr;
+  }
+  else if(heapSize <= 1){
+    heapSize--;
+    return heapArray[0];
+  }
+  else{
+    intersection* root = heapArray[0];
+    heapArray[0] = heapArray[heapSize - 1];
+    heapSize--;
+    MinHeapify(0);
+    return root;
+  }
+}
+
+void MinHeap::swap(int a, int b){
+  intersection* temp = heapArray[a];
+  heapArray[a] = heapArray[b];
+  heapArray[b] = temp;
+}
+
+void MinHeap::decreaseKey(intersection* ptr, int newWeight){
+    int i = findIndex(ptr);
+    heapArray[i]->weight = newWeight;
+    bubble(i);
+}
+
+void MinHeap::deleteKey(int i){
+  if(heapSize == 0){
+    return;
+  }
+  else{
+    heapArray[i] = heapArray[heapSize - 1];
+    heapSize--;
+    bubble(i);
+  }
+}
+
+void MinHeap::insertKey(intersection * ptr){   
+  if(heapSize == capacity){
+   resize();
+  }
+  else if(ptr->visited == false){
+    heapArray[heapSize] = ptr;
+    int p = parent(heapSize);
+    heapSize++;
+    bubble(heapSize-1);
+  }
+    
+}
+
+int MinHeap::findIndex(const intersection* ptr)
+{
+    for(int i = 0; i < heapSize; i++)
+    {
+        if(heapArray[i] == ptr)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
+void MinHeap::print()
+{
+    for(int i = 0; i < heapSize; i++)
+    {
+        heapArray[i]->print();
+    }
+}
+
+
+void shortestDist(int start, int dest, MinHeap &mh)
 {
     intersection * current = I[start];
-    current->weight = 0;
-    while(true)     //Need to find a good argument for while loop
+    mh.insertKey(current);
+    mh.decreaseKey(current, 0);
+    while(current != I[dest])     //Need to find a good argument for while loop
     {
         for(int i = 0; i < current->R.size(); i++)
         {
             if(current == current->R[i]->a && (current->weight + current->R[i]->length) < current->R[i]->b->weight)
             {
-                current->R[i]->b->weight = current->weight + current->R[i]->length;
+                intersection* other = current->R[i]->b;
+                other->weight = current->weight + current->R[i]->length;
+                other->prev = current;
+                mh.insertKey(other);
             }
             else if(current == current->R[i]->b && (current->weight + current->R[i]->length) < current->R[i]->a->weight)
             {
-                current->R[i]->a->weight = current->weight + current->R[i]->length;
+                intersection* other = current->R[i]->a;
+                other->weight = current->weight + current->R[i]->length;
+                other->prev = current;
+                mh.insertKey(other);
+            }
+        }
+        current->visited = true;
+        cout << mh.extractMin()->name << " was visited." << endl;
+        current = mh.getMin();
+        cout << current->name << " is current location." << endl << endl;
+        
+        
+        
+    }
+    current = I[dest];
+    int length = 0;;
+    while(current != I[start])
+    {
+        for(int i = 0; i < current->R.size(); i++)
+        {
+            if(current == current->R[i]->a && (current->weight - current->R[i]->length) == current->R[i]->b->weight)
+            {
+                length = length + current->R[i]->length;
+                intersection* other = current->R[i]->b;
+                cout << other->name << endl;
+                current = other;
+            }
+            else if(current == current->R[i]->b && (current->weight - current->R[i]->length) == current->R[i]->a->weight)
+            {
+                length = length + current->R[i]->length;
+                intersection* other = current->R[i]->a;
+                cout << other->name << endl;
+                current = other;
             }
         }
         
     }
+    cout << "Length: " << (double)length/10000 << endl;
+}
+
+void prompt(DynamicHashTable &hashTable, vector<abb> &vec, MinHeap &mh)
+{
+    int index1;
+    int index2;
+    string input;
+    string input_s;
+
+    cout << "What city/town will you start at?" << endl;
+    cout << "> ";
+    getline(cin, input);
+    if(input == "Q" || input == "q")
+    {
+        exit(0);
+    }
+    if(!hashTable.n_find(input, vec))
+    {
+        cout << endl;
+        search(hashTable, vec);
+    }
+    cout << endl << "> ";
+    getline(cin, input_s);
+    if(input_s == "Q" || input_s == "q")
+    {
+        exit(0);
+    }
+    Location* loc1 = hashTable.s_find(input, input_s);
+
+    
+    index1 = findInter(loc1);
+
+    cout << "What city/town will you end at?" << endl;
+    cout << "> ";
+    getline(cin, input);
+    if(input == "Q" || input == "q")
+    {
+        exit(0);
+    }
+    if(!hashTable.n_find(input, vec))
+    {
+        cout << endl;
+        search(hashTable, vec);
+    }
+    cout << endl << "> ";
+    getline(cin, input_s);
+    if(input_s == "Q" || input_s == "q")
+    {
+        exit(0);
+    }
+    Location* loc2 = hashTable.s_find(input, input_s);
+    index2 = findInter(loc2);
+    
+    shortestDist(index1, index2, mh);
 }
 
 
@@ -479,15 +730,15 @@ int main()
         cout << "File could not be opened." << endl;
         exit(1);
     }
-    else
+    
+    string line;
+    while (getline(fin, line))
     {
-        string line;
-        while (getline(fin, line))
-        {
-            hashTable.insert(Location(line));
-        }
+        hashTable.insert(Location(line));
     }
     fin.close();
-    search(hashTable, vec);
+    MinHeap mh(100);
+    prompt(hashTable, vec, mh);
+    
     return 0;
 }
