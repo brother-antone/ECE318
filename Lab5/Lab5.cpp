@@ -204,9 +204,10 @@ struct intersection
 
     int weight;
     bool visited;
-    intersection * prev;
+    intersection * next;
+    road * connection;
     
-    intersection(int i, double lo, double la, float d, string s, string n, int w = inf, bool v = false, intersection * p = nullptr)
+    intersection(int i, double lo, double la, float d, string s, string n, int w = inf, bool v = false, intersection * p = nullptr, road * r = nullptr)
     {
         index = i;
         longi = lo;
@@ -216,7 +217,9 @@ struct intersection
         name = n;
         weight = w;
         visited = v;
-        prev = p;
+        next = p;
+        connection = r;
+        
     }
 
     void print()
@@ -327,112 +330,20 @@ string dirfromto(double longitude1, double latitude1, double longitude2, double 
     return dirs[n];
     }
 
-
-void traverse(int index)
-{
-    int ext;
-    cout << "Starting intersection number: " << index << endl;
-
-    intersection * temp = I[index];
-    
-    while(temp != nullptr)
-    {
-        cout << "At intersection #" << temp->index << ", " << temp->dist << " miles from " << temp->name << ", " << temp->state << endl;
-        for(int i = 0; i < temp->R.size(); i++)
-        {
-            string dir = dirfromto(temp->R[i]->a->longi, temp->R[i]->a->lati, temp->R[i]->b->longi, temp->R[i]->b->lati);
-            string oppdir = dirfromto(temp->R[i]->b->longi, temp->R[i]->b->lati, temp->R[i]->a->longi, temp->R[i]->a->lati);
-            if(temp->index == temp->R[i]->a->index)
-            {
-                cout << "Exit " << i+1 << ": " << temp->R[i]->name << ", ";
-                cout << temp->R[i]->length << " miles " << dir << " to intersection #" << temp->R[i]->b->index;
-                cout << ", " << temp->R[i]->b->dist << " miles from " << temp->R[i]->b->name << endl;
-            }
-            else
-            {
-                cout << "Exit " << i+1 << ": " << temp->R[i]->name << ", ";
-                cout << temp->R[i]->length << " miles " << oppdir << " to intersection #" << temp->R[i]->a->index;
-                cout << ", " << temp->R[i]->a->dist << " miles from " << temp->R[i]->a->name << endl;
-            }
-        }
-        cout << "Which exit will you take?" << endl;
-        cout << "> ";
-
-        while(((!(cin >> ext) || ext > temp->R.size()) || ext == 0) && ext != -1)
-        {
-            cin.clear();
-            cin.ignore();
-            cout << "Enter valid exit number" << endl << "> ";
-        }
-
-        if(ext == -1)
-        {
-            exit(0);
-        }
-        else
-        {
-            if(temp->index == temp->R[ext-1]->a->index)
-            {
-                temp = temp->R[ext-1]->b;
-            }
-            else
-            {
-                temp = temp->R[ext-1]->a;   
-            }
-        }
-    }
-    
-}
-
 int findInter(Location * loc)
 {
+    float smallest = (float)inf;
+    int index = -1;
     for(int j = 0; j < I.size(); j++)
     {
-        if(loc->name == I[j]->name && loc->state == I[j]->state)
+        if(loc->name == I[j]->name && loc->state == I[j]->state && I[j]->dist <= smallest)
         {
-            return j;
+            smallest = I[j]->dist;
+            index = j;
         }
     }
-    return -1;
-}
 
-void search(DynamicHashTable hashTable, vector<abb> vec) {
-    int index;
-    string input;
-    string input_s;
-
-    cout << "What city/town will you start at?" << endl;
-    cout << "> ";
-    getline(cin, input);
-    if(input == "Q" || input == "q")
-    {
-        exit(0);
-    }
-    if(!hashTable.n_find(input, vec))
-    {
-        cout << endl;
-        search(hashTable, vec);
-    }
-    cout << endl << "> ";
-    getline(cin, input_s);
-    if(input_s == "Q" || input_s == "q")
-    {
-        exit(0);
-    }
-    Location* loc = hashTable.s_find(input, input_s);
-    if (loc) {
-        index = findInter(loc);
-        if (index > -1) {
-            traverse(index); 
-        } else {
-            cout << input << " " << input_s << " not found." << endl;
-            search(hashTable, vec);
-        }
-    } else {
-        cout << "Location not found." << endl;
-        search(hashTable, vec);
-    }
-    cout << endl;
+    return index;
 }
 
 class MinHeap{
@@ -461,7 +372,13 @@ public:
   int right(int i){
     return (i*2) + 2;
   }
-  
+
+  int check()
+  {
+      return heapSize;
+  }
+
+    
   intersection* getMin(){
     if(heapSize == 0){
       return nullptr;
@@ -485,9 +402,6 @@ MinHeap::MinHeap(int cap){
 }
 
 MinHeap::~MinHeap(){
-  for(int i = 0; i < heapSize; i++){
-    delete heapArray[i];
-  }
   delete[] heapArray;
 }
 
@@ -604,64 +518,87 @@ void MinHeap::print()
     }
 }
 
-
 void shortestDist(int start, int dest, MinHeap &mh)
 {
     intersection * current = I[start];
     mh.insertKey(current);
     mh.decreaseKey(current, 0);
-    while(current != I[dest])     //Need to find a good argument for while loop
+    bool beginning = true;
+    while(current != I[dest] )     //Need to find a good argument for while loop
     {
         for(int i = 0; i < current->R.size(); i++)
         {
             if(current == current->R[i]->a && (current->weight + current->R[i]->length) < current->R[i]->b->weight)
             {
                 intersection* other = current->R[i]->b;
+                
                 other->weight = current->weight + current->R[i]->length;
-                other->prev = current;
+                //other->prev = current;
                 mh.insertKey(other);
             }
             else if(current == current->R[i]->b && (current->weight + current->R[i]->length) < current->R[i]->a->weight)
             {
                 intersection* other = current->R[i]->a;
                 other->weight = current->weight + current->R[i]->length;
-                other->prev = current;
+                //other->prev = current;
                 mh.insertKey(other);
             }
         }
         current->visited = true;
-        cout << mh.extractMin()->name << " was visited." << endl;
+        mh.extractMin();
         current = mh.getMin();
-        cout << current->name << " is current location." << endl << endl;
         
         
         
     }
     current = I[dest];
-    int length = 0;;
-    while(current != I[start])
+    while(current->index != I[start]->index)
     {
         for(int i = 0; i < current->R.size(); i++)
         {
             if(current == current->R[i]->a && (current->weight - current->R[i]->length) == current->R[i]->b->weight)
             {
-                length = length + current->R[i]->length;
                 intersection* other = current->R[i]->b;
-                cout << other->name << endl;
+                other->next = current;
                 current = other;
             }
             else if(current == current->R[i]->b && (current->weight - current->R[i]->length) == current->R[i]->a->weight)
             {
-                length = length + current->R[i]->length;
                 intersection* other = current->R[i]->a;
-                cout << other->name << endl;
+                other->next = current;
                 current = other;
             }
         }
         
     }
-    cout << "Length: " << (double)length/10000 << endl;
+    current = I[start];
+    cout << "Starting point at intersection #" << I[start]->index << ", " << current->dist <<" miles of " << current->name << ", " << current->state << endl;
+    
+    while(current->next != nullptr)
+    {
+        for(int i = 0; i < current->R.size(); i++)
+        {
+            int diff = current->next->weight - current->weight;
+            road * rd = current->R[i];
+            if(diff == rd->length)
+            {
+                cout << "Take ";
+                if(rd->name == "?")
+                {
+                    cout << "unnamed road " << (float)rd->length/10000 << " miles to intersection #";
+                }
+                else
+                {
+                    cout << rd->name << " " << (float)rd->length/10000 << " miles to intersection #";
+                }
+            }
+        }
+        cout <<current->index << ", " << current->dist <<" miles of " << current->name << ", " << current->state << endl;
+        current = current->next;
+    }
+    cout << "Total miles: " << (float)I[dest]->weight/10000 << endl;
 }
+
 
 void prompt(DynamicHashTable &hashTable, vector<abb> &vec, MinHeap &mh)
 {
@@ -680,7 +617,7 @@ void prompt(DynamicHashTable &hashTable, vector<abb> &vec, MinHeap &mh)
     if(!hashTable.n_find(input, vec))
     {
         cout << endl;
-        search(hashTable, vec);
+        prompt(hashTable, vec, mh);
     }
     cout << endl << "> ";
     getline(cin, input_s);
@@ -690,31 +627,44 @@ void prompt(DynamicHashTable &hashTable, vector<abb> &vec, MinHeap &mh)
     }
     Location* loc1 = hashTable.s_find(input, input_s);
 
-    
-    index1 = findInter(loc1);
+    if(!loc1)
+    {
+        prompt(hashTable, vec, mh);
+    }
+    else
+    {
+        index1 = findInter(loc1);
 
-    cout << "What city/town will you end at?" << endl;
-    cout << "> ";
-    getline(cin, input);
-    if(input == "Q" || input == "q")
-    {
-        exit(0);
+        cout << "What city/town will you end at?" << endl;
+        cout << "> ";
+        getline(cin, input);
+        if(input == "Q" || input == "q")
+        {
+            exit(0);
+        }
+        if(!hashTable.n_find(input, vec))
+        {
+            cout << endl;
+            prompt(hashTable, vec, mh);
+        }
+        cout << endl << "> ";
+        getline(cin, input_s);
+        if(input_s == "Q" || input_s == "q")
+        {
+            exit(0);
+        }
+        Location* loc2 = hashTable.s_find(input, input_s);
+        if(!loc2)
+        {
+            prompt(hashTable, vec, mh);
+        }
+        else
+        {
+            index2 = findInter(loc2);
+            shortestDist(index1, index2, mh);
+            return;
+        }
     }
-    if(!hashTable.n_find(input, vec))
-    {
-        cout << endl;
-        search(hashTable, vec);
-    }
-    cout << endl << "> ";
-    getline(cin, input_s);
-    if(input_s == "Q" || input_s == "q")
-    {
-        exit(0);
-    }
-    Location* loc2 = hashTable.s_find(input, input_s);
-    index2 = findInter(loc2);
-    
-    shortestDist(index1, index2, mh);
 }
 
 
