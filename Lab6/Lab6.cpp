@@ -118,19 +118,15 @@ public:
 
 int main()
 {
-    vector<int> V = {14, 8, 11, 5, 14, 18, 4, 15, 11, 79};
+    vector<int> V = {3631, 1567, 1543, 4499, 2514, 2548, 4051, 1190, 4365, 3727, 4392, 1745, 4466, 4626, 2161, 2354, 20000};
 
     int final = V.back();
     V.pop_back();
-    
-    cout << "\nVector size: " << V.size() << ", Last element: " << final << endl;
 
     Table t((int)V.size(), final, V);
 
-    t.displayTable();
-
     int answer = t.findClosestValue();
-    cout << answer << endl;
+    cout << "Best possible sum is: " << answer << endl;
 
     vector <int> Steps = t.findSteps(answer);
     
