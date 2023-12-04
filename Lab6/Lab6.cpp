@@ -118,22 +118,37 @@ public:
 
 int main()
 {
-    vector<int> V = {3631, 1567, 1543, 4499, 2514, 2548, 4051, 1190, 4365, 3727, 4392, 1745, 4466, 4626, 2161, 2354, 20000};
-
-    int final = V.back();
-    V.pop_back();
-
-    Table t((int)V.size(), final, V);
-
-    int answer = t.findClosestValue();
-    cout << "Best possible sum is: " << answer << endl;
-
-    vector <int> Steps = t.findSteps(answer);
-    
-    for(int i = 0; i < (int)Steps.size(); i++)
+    int main(int argc, char *argv[])
     {
-        cout << Steps[i] << endl;
+        // Check if there are enough arguments
+        if (argc < 3) {
+            cout << "Usage: " << argv[0] << " number1 number2 ... targetSum" << endl;
+            return 1;
+        }
+
+        // Vector to hold the numbers
+        vector<int> V;
+
+        // Parse the command line arguments, except for the last one
+        for (int i = 1; i < argc - 1; i++) {
+            V.push_back(atoi(argv[i]));
+        }
+
+        // The last argument is the target sum
+        int final = atoi(argv[argc - 1]);
+
+        Table t((int)V.size(), final, V);
+
+        int answer = t.findClosestValue();
+        cout << "Best possible sum is: " << answer << endl;
+
+        vector<int> Steps = t.findSteps(answer);
+
+        for(int i = 0; i < (int)Steps.size(); i++)
+        {
+            cout << Steps[i] << endl;
+        }
+
+        return 0;
     }
-    
-    return 0;
 }
